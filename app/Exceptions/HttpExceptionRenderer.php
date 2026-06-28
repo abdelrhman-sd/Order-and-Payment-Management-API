@@ -2,10 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Exceptions\HttpExceptionHandlers\AuthenticationExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\BaseHttpExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\ModelNotFoundExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\NotFoundExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\ValidationExceptionHandler;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Http\Request;
@@ -17,9 +19,10 @@ class HttpExceptionRenderer
     public static function register(Exceptions $exceptions): void
     {
         $handlers = [
-            ValidationException::class   => ValidationExceptionHandler::class,
-            NotFoundHttpException::class => NotFoundExceptionHandler::class,
-            \Throwable::class            => BaseHttpExceptionHandler::class,
+            ValidationException::class      => ValidationExceptionHandler::class,
+            NotFoundHttpException::class    => NotFoundExceptionHandler::class,
+            AuthenticationException::class  => AuthenticationExceptionHandler::class,
+            \Throwable::class               => BaseHttpExceptionHandler::class,
         ];
 
         foreach ($handlers as $exception => $handler) {
