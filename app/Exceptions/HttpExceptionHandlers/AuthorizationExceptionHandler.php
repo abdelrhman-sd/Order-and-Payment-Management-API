@@ -6,7 +6,7 @@ use Illuminate\Http\Response;
 use Throwable;
 use Override;
 
-class AuthenticationExceptionHandler extends BaseHttpExceptionHandler
+class AuthorizationExceptionHandler extends BaseHttpExceptionHandler
 {
 
     #[Override]
@@ -18,6 +18,6 @@ class AuthenticationExceptionHandler extends BaseHttpExceptionHandler
     #[Override]
     protected static function message(Throwable $e): string
     {
-        return __('auth.failed');
+        return __('auth.forbidden');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Exceptions\HttpExceptionHandlers\AuthenticationExceptionHandler;
+use App\Exceptions\HttpExceptionHandlers\AuthorizationExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\BaseHttpExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\ModelNotFoundExceptionHandler;
 use App\Exceptions\HttpExceptionHandlers\NotFoundExceptionHandler;
@@ -11,6 +12,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Http\Request;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -22,6 +24,7 @@ class HttpExceptionRenderer
             ValidationException::class      => ValidationExceptionHandler::class,
             NotFoundHttpException::class    => NotFoundExceptionHandler::class,
             AuthenticationException::class  => AuthenticationExceptionHandler::class,
+            UnauthorizedException::class    => AuthorizationExceptionHandler::class,
             \Throwable::class               => BaseHttpExceptionHandler::class,
         ];
 

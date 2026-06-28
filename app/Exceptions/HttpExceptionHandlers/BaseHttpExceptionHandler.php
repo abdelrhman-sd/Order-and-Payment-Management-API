@@ -2,17 +2,21 @@
 
 namespace App\Exceptions\HttpExceptionHandlers;
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
 
 abstract class BaseHttpExceptionHandler
 {
 
-    protected static function status(): int
+    protected static function status(Throwable $e): int
     {
-        return Response::HTTP_INTERNAL_SERVER_ERROR;
+        return $e instanceof HttpException
+            ? $e->getStatusCode()
+            : Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 
     protected static function message(Throwable $e): string
@@ -22,9 +26,10 @@ abstract class BaseHttpExceptionHandler
 
     protected static function buildHttpJsonResponse(Throwable $e): array
     {
+        /** @var UnauthorizedException $e */
         $response = [
             'success'   => false,
-            'status'    => static::status(),
+            'status'    => static::status($e),
             'message'   => static::message($e),
         ];
 
@@ -47,6 +52,6 @@ abstract class BaseHttpExceptionHandler
 
     public static function getHttpJsonResponse(Throwable $e): JsonResponse
     {
-        return response()->json(static::buildHttpJsonResponse($e), static::status());
+        return response()->json(static::buildHttpJsonResponse($e), static::status($e));
     }
 }

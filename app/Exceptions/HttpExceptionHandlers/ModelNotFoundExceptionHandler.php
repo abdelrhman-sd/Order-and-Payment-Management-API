@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class ModelNotFoundExceptionHandler extends BaseHttpExceptionHandler
 {
     #[Override]
-    protected static function status(): int
+    protected static function status(Throwable $e): int
     {
         return Response::HTTP_NOT_FOUND;
     }
