@@ -13,7 +13,7 @@ build: ## Build/rebuild images
 	docker compose build --no-cache
 
 shell: ## Shell into the app container
-	docker compose exec app bash
+	docker compose exec app sh
 
 artisan: ## Run artisan command — usage: make artisan CMD="migrate"
 	docker compose exec app php artisan $(CMD)

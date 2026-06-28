@@ -26,6 +26,8 @@ COPY php/php.ini /usr/local/etc/php/conf.d/app.ini
 
 RUN install-php-extensions xdebug
 
+RUN apk add --no-cache mysql-client
+
 # deps layer cached separately from app code
 COPY composer.json composer.lock ./
 RUN composer install --no-interaction --no-scripts --no-autoloader

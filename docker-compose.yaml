@@ -2,13 +2,12 @@ services:
   app:
     build:
       context: .
-      target: ${APP_ENV:-development}
+      target: ${APP_ENV:-local}
     container_name: ${APP_NAME:-laravel_app}
     restart: unless-stopped
     working_dir: /var/www
     volumes:
       - .:/var/www
-      #- ./php/php.ini:/usr/local/etc/php/conf.d/app.ini
     ports:
       - "${APP_PORT:-8000}:8000"
     environment:
@@ -53,6 +52,39 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - assignment_network
+
+  queue:
+    build:
+      context: .
+      target: ${APP_ENV:-local}
+    container_name: queue
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - assignment_network
+
+  scheduler:
+    build:
+      context: .
+      target: ${APP_ENV:-local}
+    container_name: scheduler
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    command: sh -c "while true; do php artisan schedule:run --verbose --no-interaction; sleep 60; done"
+    depends_on:
+      - app
     networks:
       - assignment_network
 
