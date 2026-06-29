@@ -22,7 +22,7 @@ class ValidationExceptionHandler extends BaseHttpExceptionHandler
     }
 
     #[Override]
-    protected static function buildHttpJsonResponse(Throwable $e): array
+    protected static function buildHttpJsonResponse(Throwable $e, bool $isHanlded = false): array
     {
         assert($e instanceof ValidationException);
 

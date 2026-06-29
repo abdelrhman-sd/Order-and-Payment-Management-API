@@ -29,17 +29,26 @@ class HttpExceptionRenderer
         ];
 
         foreach ($handlers as $exception => $handler) {
-            $exceptions->render(function (\Throwable $e, Request $request) use ($exception, $handler) {
+            $exceptions->render(function (\Throwable $e, Request $request) use ($exception, $handler, $handlers) {
                 if (!$request->is('api/*')) return null;
-
                 if ($e instanceof NotFoundHttpException && $e->getPrevious() instanceof ModelNotFoundException) {
                     return ModelNotFoundExceptionHandler::getHttpJsonResponse($e->getPrevious());
                 }
-
                 if ($e instanceof $exception) {
-                    return $handler::getHttpJsonResponse($e);
+                    return $handler::getHttpJsonResponse($e, self::isHandled($e, $handlers));
                 }
             });
         }
+    }
+
+    private static function isHandled(\Throwable $e, array $handlers): bool
+    {
+        $handled = array_keys(array_filter(
+            $handlers,
+            fn($type) => $type !== \Throwable::class && $e instanceof $type,
+            ARRAY_FILTER_USE_KEY
+        ));
+
+        return count($handled) > 0;
     }
 }

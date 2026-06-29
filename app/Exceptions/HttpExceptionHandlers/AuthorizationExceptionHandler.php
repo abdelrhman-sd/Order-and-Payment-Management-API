@@ -18,6 +18,6 @@ class AuthorizationExceptionHandler extends BaseHttpExceptionHandler
     #[Override]
     protected static function message(Throwable $e): string
     {
-        return __('auth.forbidden');
+        return $e->getMessage() ?: __('auth.forbidden');
     }
 }
