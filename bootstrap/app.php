@@ -1,16 +1,10 @@
 <?php
 
 use App\Exceptions\HttpExceptionRenderer;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Support\Str;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -20,13 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware
+            ->api(AddQueuedCookiesToResponse::class)
+            ->encryptCookies(except: [
+                env('APP_NAME') . ':refresh_token'
+            ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-
         HttpExceptionRenderer::register($exceptions);
-        //$exceptions
-        //    ->shouldRenderJsonWhen(
-        //        fn(Request $request) => $request->is('api/*'),
-        //    );
     })->create();
