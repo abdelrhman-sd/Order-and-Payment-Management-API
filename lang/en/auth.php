@@ -14,6 +14,14 @@ return [
     */
 
     'failed'    => 'These credentials do not match our records.',
+    'forbidden' => "You don't have the permission to make this action",
     'password'  => 'The provided password is incorrect.',
     'throttle'  => 'Too many login attempts. Please try again in :seconds seconds.',
+
+    // JWT
+    'jwt_rvk' => 'Access token has been revoked',
+    'jwt_missing' => 'Access token missing',
+    'jwt_invalid' => 'Access token invalid or expired',
+    'jwt_rft_missing' => 'Refresh token missing',
+    'jwt_rff_invalid' => 'Refresh token invalid or expired'
 ];

@@ -114,4 +114,8 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /* JWT */
+    'jwt_secret' => env('JWT_SECRET'),
+    'jwt_ttl'    => env('JWT_TTL', 900),
+    'refresh_token_cookie_name' => config('app.name') . ':refresh_token'
 ];

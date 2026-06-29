@@ -1,16 +1,14 @@
 <?php
 
-use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Validator;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-Route::get('/user', function (Request $request) {
-    //throw new NotFoundHttpException();
-    return User::findOrFail(1);
-    //throw new AuthenticationException('ok');
+Route::controller(AuthController::class)->group(function () {
+    Route::post('login', 'login');
+    Route::post('logout', 'logout');
+
+    Route::post('refresh/access/token', 'refresh');
+
+    Route::get('/me', 'me')->middleware(JwtMiddleware::class);
 });
