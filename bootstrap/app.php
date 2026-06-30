@@ -17,7 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware
             ->api(AddQueuedCookiesToResponse::class)
             ->encryptCookies(except: [
-                env('APP_NAME') . ':refresh_token'
+                'PAYMENT_API:refresh_token'
             ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
