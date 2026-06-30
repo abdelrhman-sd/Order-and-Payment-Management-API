@@ -8,5 +8,9 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'not_found' => ':resource not found'
+    'not_found' => ':resource not found',
+    // crud messages
+    'created' => ':resource created successfully!',
+    'updated' => ':resource updated successfully!',
+    'deleted' => ':resource deleted successfully!'
 ];

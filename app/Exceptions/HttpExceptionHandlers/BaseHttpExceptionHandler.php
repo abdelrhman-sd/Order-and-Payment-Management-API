@@ -2,6 +2,7 @@
 
 namespace App\Exceptions\HttpExceptionHandlers;
 
+use Error;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\UnauthorizedException;
@@ -20,7 +21,9 @@ abstract class BaseHttpExceptionHandler
 
     protected static function message(Throwable $e): string
     {
-        return $e->getMessage();
+        return $e instanceof Error && ! app()->hasDebugModeEnabled()
+            ? __('http.internal_error')
+            : $e->getMessage();
     }
 
     protected static function buildHttpJsonResponse(Throwable $e, bool $isHandled = false): array
@@ -33,6 +36,7 @@ abstract class BaseHttpExceptionHandler
         ];
 
         if (app()->hasDebugModeEnabled() && !$isHandled) {
+
             $response = array_merge($response, [
                 'exception' => get_class($e),
                 'file'      => $e->getFile(),
