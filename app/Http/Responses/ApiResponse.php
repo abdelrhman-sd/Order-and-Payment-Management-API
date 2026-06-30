@@ -13,9 +13,11 @@ class ApiResponse
         array   $additional = []
     ): JsonResponse {
 
-        return response()->json(
-            array_merge(['success' => true, 'data' => $data], $additional),
-            $status
-        );
+        $response = ['success' => true, 'status' => $status];
+
+        empty($data)
+            ?: $response['data'] = $data;
+
+        return response()->json(array_merge($response, $additional), $status);
     }
 }

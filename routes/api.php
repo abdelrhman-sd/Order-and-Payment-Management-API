@@ -4,11 +4,15 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\JwtMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::controller(AuthController::class)->group(function () {
-    Route::post('login', 'login');
-    Route::post('logout', 'logout');
+Route::prefix('auth')->group(function () {
 
-    Route::post('refresh/access/token', 'refresh');
+    Route::controller(AuthController::class)->group(function () {
+        Route::post('login', 'login');
+        Route::post('logout', 'logout');
 
-    Route::get('/me', 'me')->middleware(JwtMiddleware::class);
+        Route::post('refresh', 'refresh');
+        Route::post('register', 'register');
+
+        Route::get('/me', 'me')->middleware(JwtMiddleware::class);
+    });
 });

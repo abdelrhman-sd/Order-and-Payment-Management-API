@@ -10,7 +10,7 @@ uses(RefreshDatabase::class);
 
 it('issues_access_token_and_refresh_token_cookie_on_successful_login', function (): void {
 
-    $response = postJson('/api/login', [
+    $response = postJson('/api/auth/login', [
         'email'     => User::factory()->create()->email,
         'password'  => 'password'
     ]);
@@ -30,7 +30,7 @@ it('issues_access_token_and_refresh_token_cookie_on_successful_login', function 
 
 it('rejects_login_with_wrong_password', function (): void {
 
-    $response = postJson('/api/login', [
+    $response = postJson('/api/auth/login', [
         'email'     => User::factory()->create()->email,
         'password'  => 'wrong-password'
     ]);
@@ -47,7 +47,7 @@ it('rejects_login_with_wrong_password', function (): void {
 
 it('rejects_login_with_nonexistent_email', function (): void {
 
-    $response = postJson('/api/login', [
+    $response = postJson('/api/auth/login', [
         'email'     => 'email@nonexistent.email',
         'password'  => 'password'
     ]);
@@ -64,7 +64,7 @@ it('rejects_login_with_nonexistent_email', function (): void {
 
 it('it_rejects_login_with_invalid_login_fields', function () {
 
-    $response = postjson('/api/login', []);
+    $response = postjson('/api/auth/login', []);
     $response
         ->assertUnprocessable()
         ->assertjson([

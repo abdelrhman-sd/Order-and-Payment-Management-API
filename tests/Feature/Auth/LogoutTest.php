@@ -19,7 +19,7 @@ it('revoke_tokens_on_logout', function (): void {
 
     $user = User::factory()->create();
 
-    $response = postJson('/api/login', [
+    $response = postJson('/api/auth/login', [
         'email'     => $user->email,
         'password'  => 'password'
     ]);
@@ -36,7 +36,7 @@ it('revoke_tokens_on_logout', function (): void {
     /** @var TestResponse  */
     $response = test()->call(
         'POST',
-        '/api/logout',
+        '/api/auth/logout',
         [],
         [config('auth.refresh_token_cookie_name') => $refreshTokenRaw], // cookies array
         [],
@@ -64,11 +64,11 @@ it('rejects_requests_with_blacklisted_tokens', function (): void {
     $token = JwtService::generateAccessToken($user->id, ['email' => $user->email]);
 
     withToken($token)
-        ->postJson('api/logout')
+        ->postJson('api/auth/logout')
         ->assertOk();
 
     withToken($token)
-        ->get('api/me')
+        ->get('api/auth/me')
         ->assertUnauthorized()
         ->assertJson([
             'success'   => false,
