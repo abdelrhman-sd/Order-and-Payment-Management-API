@@ -20,7 +20,7 @@ class JwtMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (! ($token = $request->bearerToken())) {
-            throw new UnauthorizedException('Access token missing');
+            throw new UnauthorizedException(__('auth.unauthenticated'));
         }
 
         try {
