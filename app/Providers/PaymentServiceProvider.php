@@ -14,7 +14,7 @@ class PaymentServiceProvider extends ServiceProvider
         $this->app->bind(PaymentGateway::class, function ($app) {
 
             if (is_null($gateway = request()->route('gateway'))) {
-                throw ValidationException::withMessages(['payment gateway query paramter is missing!']);
+                throw ValidationException::withMessages(['payment gateway route paramter is missing!']);
             }
 
             return match ($gateway) {
