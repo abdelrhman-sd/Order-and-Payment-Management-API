@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\Pivot;
 
 #[Fillable([
     'user_id',
@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
     'notes',
     'source_platform'
 ])]
-class Order extends Pivot
+class Order extends Model
 {
     protected $table = 'orders';
 
@@ -28,6 +28,11 @@ class Order extends Pivot
 
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'order_id');
     }
 }

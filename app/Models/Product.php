@@ -5,21 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
 
 #[Fillable(['name', 'quantity', 'price'])]
 class Product extends Model
 {
-
-    public function order(): BelongsTo
+    public function orderItems(): HasMany
     {
-        return $this->belongsTo(Order::class);
+        return $this->hasMany(OrderItem::class);
     }
 
     public static function decreaseProductStock(array $products): void
     {
-        DB::beginTransaction();
-
         $productIds = collect($products)->pluck('id');
 
         Product::whereIn('id', $productIds)->lockForUpdate();
@@ -31,7 +29,5 @@ class Product extends Model
         DB::table('products')
             ->whereIn('id', $productIds)
             ->update(['stock' => DB::raw("CASE id {$cases} END")]);
-
-        DB::commit();
     }
 }
