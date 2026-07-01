@@ -9,6 +9,6 @@ enum PaymentStatus: string
     case PROCESSING = 'processsing';
     case PAID       = 'paid';
     case FAILED     = 'failed';
-    case REFUNDED   = 'refuned';
+    case REFUNDED   = 'refunded';
     case PARTIALLY_REFUNDED = 'partially_refunded';
 }
