@@ -36,6 +36,11 @@ ps: ## Show running containers
 key: ## Generate app key
 	docker compose exec app php artisan key:generate
 
+jwt: ## Generate a JWT Secret Key
+	docker compose exec app php artisan tinker --execute="echo base64_encode(random_bytes(32));"
+
+# JWT_SECRET=<output>
+
 setup: ## First-time setup: copy .env, install deps, key, migrate
 	#cp -n .env.example .env || true
 	docker compose up -d --build
