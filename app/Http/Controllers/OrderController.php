@@ -37,7 +37,7 @@ class OrderController extends Controller
 
     public function show(Order $order): JsonResponse
     {
-        return $order->load('payments')->get();
+        return ApiResponse::build(data: $order->load('payments'));
     }
 
     public function destroy(Order $order): JsonResponse
