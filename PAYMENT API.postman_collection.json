@@ -1,0 +1,1563 @@
+{
+  "info": {
+    "_postman_id": "87cd4885-e73c-4d5b-b4f6-a24af7dfa75a",
+    "name": "PAYMENT API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50454027"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john2@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Register a new user account.\n\n**Request Body:**\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| name | string | Yes | Full name of the user |\n| email | string | Yes | Unique email address |\n| password | string | Yes | Minimum 8 characters |\n| password_confirmation | string | Yes | Must match `password` |\n\n**Responses:**\n- `201` — User registered successfully. Returns user details and access token.\n- `422` — Validation failed (e.g. email already taken, password mismatch)."
+          },
+          "response": [
+            {
+              "name": "201 Registered Successfully",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 201,\n    \"message\": \"User registered successfully\"\n}"
+            },
+            {
+              "name": "422 Validation Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/register",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "register"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 422,\n    \"message\": \"validation failed\",\n    \"errors\": {\n        \"email\": [\n            \"The email has already been taken.\"\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticate an existing user and retrieve a JWT access token.\n\n**Request Body:**\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| email | string | Yes | Registered email address |\n| password | string | Yes | Account password |\n\n**Responses:**\n- `200` — Login successful. Returns `access_token`, `token_type`, and `expires_in`.\n- `401` — Invalid credentials.\n\n> **Tip:** Save the returned `access_token` to the `{{access_token}}` environment variable to automatically authenticate subsequent requests."
+          },
+          "response": [
+            {
+              "name": "200 Login Successful",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"email\":\"john@example.com\",\"password\":\"password123\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n        \"token_type\": \"Bearer\",\n        \"expires_in\": \"900\"\n    }\n}"
+            },
+            {
+              "name": "401 Invalid Credentials",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "login"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 401,\n    \"message\": \"These credentials do not match our records.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Invalidate the current user's access token and end the session.\n\nRequires a valid Bearer token in the `Authorization` header (handled automatically via collection-level auth).\n\n**Responses:**\n- `200` — Successfully logged out.\n- `401` — No valid token provided."
+          },
+          "response": [
+            {
+              "name": "200 Logout Successful",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "logout"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"message\": \"Logged out successfully!\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Issue a new access token using the current valid token before it expires.\n\nUse this endpoint to extend the session without requiring the user to log in again. Requires a valid Bearer token.\n\n**Responses:**\n- `200` — Returns a new `access_token` and updated `expires_in`.\n- `401` — Token is invalid or already expired."
+          },
+          "response": [
+            {
+              "name": "200 Token Refreshed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/refresh",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"access_token\": \"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...\",\n        \"token_type\": \"Bearer\",\n        \"expires_in\": \"900\"\n    }\n}"
+            },
+            {
+              "name": "401 Refresh Token Missing",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/refresh",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 401,\n    \"message\": \"Refresh token is missing\"\n}"
+            },
+            {
+              "name": "401 Refresh Token is Invalid or Expired",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/refresh",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "refresh"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 401,\n    \"message\": \"Refresh token is invalid or expired\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Me (Get Current User)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Retrieve the profile information of the currently authenticated user.\n\nRequires a valid Bearer token in the `Authorization` header.\n\n**Responses:**\n- `200` — Returns the authenticated user's `id`, `name`, `email`, and `created_at`.\n- `401` — Unauthenticated request."
+          },
+          "response": [
+            {
+              "name": "200 User Profile",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"John Doe\",\n        \"email\": \"john@example.com\",\n        \"email_verified_at\": null,\n        \"created_at\": \"2026-06-30T03:08:45.000000Z\",\n        \"updated_at\": \"2026-06-30T03:08:45.000000Z\"\n    }\n}"
+            },
+            {
+              "name": "401 Unauthorized",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 401,\n    \"message\": \"Unauthenticated.\"\n}"
+            },
+            {
+              "name": "401 Access Token Has Been Revoked",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 401,\n    \"message\": \"Access token has been revoked.\"\n}"
+            },
+            {
+              "name": "401 Access Token is Invalid or Expired",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/auth/me",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "auth",
+                    "me"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 401,\n    \"message\": \"Access token is invalid or expired\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "## Auth\n\nHandles all authentication operations including user registration, login, logout, and token management. \n\nAll endpoints under this folder use JWT-based authentication. After a successful login, use the returned `access_token` as a Bearer token in the `Authorization` header for all protected routes. The collection-level auth is pre-configured to use `{{access_token}}`."
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            },
+            "description": "Retrieve a paginated list of all orders for the authenticated user.\n\n**Responses:**\n- `200` — Returns an array of orders with pagination metadata (`total`, `per_page`, `current_page`).\n- `401` — Unauthenticated request."
+          },
+          "response": [
+            {
+              "name": "200 Orders List",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/orders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"orders\": [\n            {\n                \"id\": 1,\n                \"user_id\": 1,\n                \"status\": \"confirmed\",\n                \"subtotal\": 1225,\n                \"tax\": 0,\n                \"total\": 1225,\n                \"currency\": \"EGP\",\n                \"source_platform\": \"web\",\n                \"created_at\": \"2026-07-01T08:37:17.000000Z\",\n                \"updated_at\": \"2026-07-01T08:38:26.000000Z\"\n            },\n            {\n                \"id\": 2,\n                \"user_id\": 1,\n                \"status\": \"pending\",\n                \"subtotal\": 1225,\n                \"tax\": 0,\n                \"total\": 1225,\n                \"currency\": \"EGP\",\n                \"source_platform\": \"web\",\n                \"created_at\": \"2026-07-01T08:42:44.000000Z\",\n                \"updated_at\": \"2026-07-01T08:42:44.000000Z\"\n            },\n            {\n                \"id\": 3,\n                \"user_id\": 1,\n                \"status\": \"confirmed\",\n                \"subtotal\": 1225,\n                \"tax\": 0,\n                \"total\": 1225,\n                \"currency\": \"EGP\",\n                \"source_platform\": \"web\",\n                \"created_at\": \"2026-07-01T11:34:30.000000Z\",\n                \"updated_at\": \"2026-07-01T11:37:53.000000Z\"\n            }\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/:{{order_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                ":{{order_id}}"
+              ],
+              "variable": [
+                {
+                  "key": "{{order_id}}",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Retrieve the full details of a specific order by its ID, including all line items.\n\n**Path Variables:**\n| Variable | Description |\n|----------|-------------|\n| `order_id` | The unique ID of the order |\n\n**Responses:**\n- `200` — Returns order details including `items`, `total`, `status`, and timestamps.\n- `404` — Order not found."
+          },
+          "response": [
+            {
+              "name": "200 Order Details",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/orders/{{order_id}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders",
+                    "{{order_id}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"id\": 1,\n        \"user_id\": 1,\n        \"status\": \"confirmed\",\n        \"subtotal\": 1225,\n        \"tax\": 0,\n        \"total\": 1225,\n        \"currency\": \"EGP\",\n        \"source_platform\": \"web\",\n        \"created_at\": \"2026-07-01T08:37:17.000000Z\",\n        \"updated_at\": \"2026-07-01T08:38:26.000000Z\",\n        \"payments\": [\n            {\n                \"id\": 1,\n                \"order_id\": 1,\n                \"status\": \"partially_refunded\",\n                \"gateway\": \"paymob\",\n                \"gateway_payment_id\": \"488045473\",\n                \"gateway_order_id\": \"556950325\",\n                \"payment_method\": \"card\",\n                \"idempotency_key\": \"47f390a1-fda0-4700-bcc6-29598bddf779\",\n                \"amount\": 1225,\n                \"currency\": \"EGP\",\n                \"metadata\": null,\n                \"failed_reason\": null,\n                \"paid_at\": \"2026-07-01 08:38:26\",\n                \"created_at\": \"2026-07-01T08:37:29.000000Z\",\n                \"updated_at\": \"2026-07-01T08:39:17.000000Z\"\n            },\n            {\n                \"id\": 2,\n                \"order_id\": 1,\n                \"status\": \"refuned\",\n                \"gateway\": \"paymob\",\n                \"gateway_payment_id\": \"488046118\",\n                \"gateway_order_id\": \"556950325\",\n                \"payment_method\": null,\n                \"idempotency_key\": \"f5df2ce7-0621-4da6-83bd-7237ae4a58f0\",\n                \"amount\": -150,\n                \"currency\": \"EGP\",\n                \"metadata\": {\n                    \"refunded_for\": 1,\n                    \"parent_transaction\": 488045473\n                },\n                \"failed_reason\": null,\n                \"paid_at\": null,\n                \"created_at\": \"2026-07-01T08:39:17.000000Z\",\n                \"updated_at\": \"2026-07-01T08:39:17.000000Z\"\n            }\n        ]\n    }\n}"
+            },
+            {
+              "name": "404 Order Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/orders/{{order_id}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders",
+                    "{{order_id}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\"message\":\"Order not found.\"}"
+            }
+          ]
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"currency\": \"egp\",\n    \"source_platform\": \"web\",\n    \"products\": [\n        {\n            \"id\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 1\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            },
+            "description": "Place a new order with one or more items.\n\n**Request Body:**\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| items | array | Yes | List of products with `product_id` and `quantity` |\n| shipping_address | string | Yes | Delivery address for the order |\n\n**Responses:**\n- `201` — Order created successfully. Returns the new order with its `id` and `status`.\n- `422` — Validation error (e.g. missing items or invalid product ID)."
+          },
+          "response": [
+            {
+              "name": "201 Order Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"currency\": \"egp\",\n    \"source_platform\": \"web\",\n    \"products\": [\n        {\n            \"id\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 1\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/orders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"message\": \"Order created successfully!\",\n    \"data\": {\n        \"source_platform\": \"web\",\n        \"status\": \"pending\",\n        \"tax\": 0,\n        \"subtotal\": 1225,\n        \"total\": 1225,\n        \"user_id\": 1,\n        \"updated_at\": \"2026-07-01T11:34:30.000000Z\",\n        \"created_at\": \"2026-07-01T11:34:30.000000Z\",\n        \"id\": 3\n    }\n}"
+            },
+            {
+              "name": "422 Validation Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"currency\": \"egp\",\n    \"source_platform\": \"web\",\n    \"products\": [\n        {\n            \"id\": 1,\n            \"quantity\": 1\n        },\n        {\n            \"id\": 2,\n            \"quantity\": 1\n        }\n    ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/orders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "orders"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 422,\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"currency\": [\n            \"required\",\n            \"minimum size is 3\"\n        ],\n        \"products\": [\n            \"required\",\n            \"must be array\"\n        ],\n        \"products.0.id\": [\n            \"required\",\n            \"must exist in the products table\"\n        ],\n        \"products.0.quantity\": [\n            \"required\",\n            \"product stock only has 30 units\"\n        ]\n    }\n}"
+            }
+          ]
+        }
+      ],
+      "description": "## Orders\n\nManage customer orders throughout their lifecycle — from creation to cancellation.\n\nAll endpoints require authentication via Bearer token (configured at the collection level using `{{access_token}}`). Use `{{order_id}}` as a path variable to target a specific order."
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Get All Payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                ""
+              ]
+            },
+            "description": "Retrieve a paginated list of all payments for the authenticated user.\n\n**Responses:**\n- `200` — Returns an array of payments with `id`, `order_id`, `amount`, `method`, `status`, and timestamps.\n- `401` — Unauthenticated request."
+          },
+          "response": [
+            {
+              "name": "200 Payments List",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"order_id\": 1,\n            \"status\": \"partially_refunded\",\n            \"gateway\": \"paymob\",\n            \"gateway_payment_id\": \"488045473\",\n            \"gateway_order_id\": \"556950325\",\n            \"payment_method\": \"card\",\n            \"idempotency_key\": \"47f390a1-fda0-4700-bcc6-29598bddf779\",\n            \"amount\": 1225,\n            \"currency\": \"EGP\",\n            \"metadata\": null,\n            \"failed_reason\": null,\n            \"paid_at\": \"2026-07-01 08:38:26\",\n            \"created_at\": \"2026-07-01T08:37:29.000000Z\",\n            \"updated_at\": \"2026-07-01T08:39:17.000000Z\"\n        },\n        {\n            \"id\": 2,\n            \"order_id\": 1,\n            \"status\": \"refuned\",\n            \"gateway\": \"paymob\",\n            \"gateway_payment_id\": \"488046118\",\n            \"gateway_order_id\": \"556950325\",\n            \"payment_method\": null,\n            \"idempotency_key\": \"f5df2ce7-0621-4da6-83bd-7237ae4a58f0\",\n            \"amount\": -150,\n            \"currency\": \"EGP\",\n            \"metadata\": {\n                \"refunded_for\": 1,\n                \"parent_transaction\": 488045473\n            },\n            \"failed_reason\": null,\n            \"paid_at\": null,\n            \"created_at\": \"2026-07-01T08:39:17.000000Z\",\n            \"updated_at\": \"2026-07-01T08:39:17.000000Z\"\n        },\n        {\n            \"id\": 3,\n            \"order_id\": 2,\n            \"status\": \"pending\",\n            \"gateway\": \"paymob\",\n            \"gateway_payment_id\": \"pi_test_90e27585224c48a8ba8b8ca4e656d650\",\n            \"gateway_order_id\": \"556953367\",\n            \"payment_method\": \"card\",\n            \"idempotency_key\": \"b8c73fe7-a30a-4ef0-a30d-8c695f1143f2\",\n            \"amount\": 1225,\n            \"currency\": \"EGP\",\n            \"metadata\": null,\n            \"failed_reason\": null,\n            \"paid_at\": null,\n            \"created_at\": \"2026-07-01T08:42:53.000000Z\",\n            \"updated_at\": \"2026-07-01T08:42:53.000000Z\"\n        },\n        {\n            \"id\": 4,\n            \"order_id\": 3,\n            \"status\": \"paid\",\n            \"gateway\": \"paymob\",\n            \"gateway_payment_id\": \"488150635\",\n            \"gateway_order_id\": \"557070770\",\n            \"payment_method\": \"card\",\n            \"idempotency_key\": \"b87a3ad6-6c51-4efa-8565-ed0ad197456d\",\n            \"amount\": 1225,\n            \"currency\": \"EGP\",\n            \"metadata\": null,\n            \"failed_reason\": null,\n            \"paid_at\": \"2026-07-01 11:37:53\",\n            \"created_at\": \"2026-07-01T11:34:39.000000Z\",\n            \"updated_at\": \"2026-07-01T11:37:53.000000Z\"\n        }\n    ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Payment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{payment_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{payment_id}}"
+              ]
+            },
+            "description": "Retrieve the full details of a specific payment by its ID.\n\n**Path Variables:**\n| Variable | Description |\n|----------|-------------|\n| `payment_id` | The unique ID of the payment |\n\n**Responses:**\n- `200` — Returns payment details including `transaction_id`, `method`, `amount`, and `status`.\n- `404` — Payment not found."
+          },
+          "response": [
+            {
+              "name": "200 Payment Details",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments/{{payment_id}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments",
+                    "{{payment_id}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"id\": 1,\n        \"order_id\": 1,\n        \"status\": \"partially_refunded\",\n        \"gateway\": \"paymob\",\n        \"gateway_payment_id\": \"488045473\",\n        \"gateway_order_id\": \"556950325\",\n        \"payment_method\": \"card\",\n        \"idempotency_key\": \"47f390a1-fda0-4700-bcc6-29598bddf779\",\n        \"amount\": 1225,\n        \"currency\": \"EGP\",\n        \"metadata\": null,\n        \"failed_reason\": null,\n        \"paid_at\": \"2026-07-01 08:38:26\",\n        \"created_at\": \"2026-07-01T08:37:29.000000Z\",\n        \"updated_at\": \"2026-07-01T08:39:17.000000Z\",\n        \"order\": {\n            \"id\": 1,\n            \"user_id\": 1,\n            \"status\": \"confirmed\",\n            \"subtotal\": 1225,\n            \"tax\": 0,\n            \"total\": 1225,\n            \"currency\": \"EGP\",\n            \"source_platform\": \"web\",\n            \"created_at\": \"2026-07-01T08:37:17.000000Z\",\n            \"updated_at\": \"2026-07-01T08:38:26.000000Z\"\n        }\n    }\n}"
+            },
+            {
+              "name": "404 Payment Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments/{{payment_id}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments",
+                    "{{payment_id}}"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 404,\n    \"message\": \"Payment not found.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "",
+                  "const template = `",
+                  "<html>",
+                  "<head>",
+                  "  <style>",
+                  "    body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f4; }",
+                  "    .card { background: white; border-radius: 8px; padding: 20px; max-width: 500px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }",
+                  "    .status { display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: bold; font-size: 14px; }",
+                  "    .success { background: #d4edda; color: #155724; }",
+                  "    .error { background: #f8d7da; color: #721c24; }",
+                  "    h2 { margin-top: 0; color: #333; }",
+                  "    .label { font-size: 12px; color: #888; margin-top: 16px; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }",
+                  "    .value { font-size: 15px; color: #333; word-break: break-all; }",
+                  "    a { color: #007bff; text-decoration: none; }",
+                  "    a:hover { text-decoration: underline; }",
+                  "    .code { background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-family: monospace; }",
+                  "  </style>",
+                  "</head>",
+                  "<body>",
+                  "  <div class=\"card\">",
+                  "    <h2>Payment Response</h2>",
+                  "    <span class=\"status ${response.success ? 'success' : 'error'}\">",
+                  "      ${response.success ? '✓ Success' : '✗ Failed'}",
+                  "    </span>",
+                  "    <div class=\"label\">HTTP Status</div>",
+                  "    <div class=\"value\"><span class=\"code\">${response.status}</span></div>",
+                  "    ${response.data && response.data.checkout_url ? `",
+                  "    <div class=\"label\">Checkout URL</div>",
+                  "    <div class=\"value\"><a href=\"${response.data.checkout_url}\" target=\"_blank\">${response.data.checkout_url}</a></div>",
+                  "    ` : ''}",
+                  "  </div>",
+                  "</body>",
+                  "</html>",
+                  "`;",
+                  "",
+                  "pm.visualizer.set(template);",
+                  "",
+                  "// Visualization Script",
+                  "",
+                  "const template = `",
+                  "<html>",
+                  "<head>",
+                  "  <style>",
+                  "    body {",
+                  "      font-family: 'Segoe UI', Arial, sans-serif;",
+                  "      background: #f0f4f8;",
+                  "      display: flex;",
+                  "      justify-content: center;",
+                  "      align-items: flex-start;",
+                  "      padding: 30px;",
+                  "      margin: 0;",
+                  "    }",
+                  "    .card {",
+                  "      background: #ffffff;",
+                  "      border-radius: 12px;",
+                  "      box-shadow: 0 4px 20px rgba(0,0,0,0.1);",
+                  "      padding: 28px 32px;",
+                  "      max-width: 520px;",
+                  "      width: 100%;",
+                  "    }",
+                  "    .header {",
+                  "      display: flex;",
+                  "      align-items: center;",
+                  "      gap: 12px;",
+                  "      margin-bottom: 24px;",
+                  "      padding-bottom: 16px;",
+                  "      border-bottom: 2px solid #e8f5e9;",
+                  "    }",
+                  "    .badge {",
+                  "      background: #e8f5e9;",
+                  "      color: #2e7d32;",
+                  "      border-radius: 20px;",
+                  "      padding: 4px 14px;",
+                  "      font-size: 12px;",
+                  "      font-weight: 600;",
+                  "      letter-spacing: 0.5px;",
+                  "      text-transform: uppercase;",
+                  "    }",
+                  "    .header h2 {",
+                  "      margin: 0;",
+                  "      font-size: 18px;",
+                  "      color: #1b5e20;",
+                  "      font-weight: 700;",
+                  "    }",
+                  "    table {",
+                  "      width: 100%;",
+                  "      border-collapse: collapse;",
+                  "    }",
+                  "    tr:nth-child(even) td {",
+                  "      background: #f9fbe7;",
+                  "    }",
+                  "    td {",
+                  "      padding: 11px 14px;",
+                  "      font-size: 14px;",
+                  "      border-radius: 6px;",
+                  "    }",
+                  "    td:first-child {",
+                  "      color: #555;",
+                  "      font-weight: 600;",
+                  "      width: 45%;",
+                  "    }",
+                  "    td:last-child {",
+                  "      color: #222;",
+                  "      font-weight: 500;",
+                  "    }",
+                  "    .status-badge {",
+                  "      display: inline-block;",
+                  "      background: #fff3e0;",
+                  "      color: #e65100;",
+                  "      border-radius: 12px;",
+                  "      padding: 2px 12px;",
+                  "      font-size: 12px;",
+                  "      font-weight: 700;",
+                  "      text-transform: capitalize;",
+                  "    }",
+                  "    .id-badge {",
+                  "      display: inline-block;",
+                  "      background: #e3f2fd;",
+                  "      color: #1565c0;",
+                  "      border-radius: 12px;",
+                  "      padding: 2px 12px;",
+                  "      font-size: 13px;",
+                  "      font-weight: 700;",
+                  "    }",
+                  "    .amount {",
+                  "      color: #2e7d32;",
+                  "      font-weight: 700;",
+                  "    }",
+                  "    .footer {",
+                  "      margin-top: 18px;",
+                  "      text-align: center;",
+                  "      font-size: 11px;",
+                  "      color: #aaa;",
+                  "      letter-spacing: 0.3px;",
+                  "    }",
+                  "  </style>",
+                  "</head>",
+                  "<body>",
+                  "  <div class=\"card\">",
+                  "    <div class=\"header\">",
+                  "      <span class=\"badge\">&#10003; Success</span>",
+                  "      <h2>{{message}}</h2>",
+                  "    </div>",
+                  "    <table>",
+                  "      <tr>",
+                  "        <td>Order ID</td>",
+                  "        <td><span class=\"id-badge\">#{{id}}</span></td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>Status</td>",
+                  "        <td><span class=\"status-badge\">{{status}}</span></td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>Source Platform</td>",
+                  "        <td>{{source_platform}}</td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>Subtotal</td>",
+                  "        <td class=\"amount\">{{subtotal}}</td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>Tax</td>",
+                  "        <td class=\"amount\">{{tax}}</td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>Total</td>",
+                  "        <td class=\"amount\">{{total}}</td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>User ID</td>",
+                  "        <td>{{user_id}}</td>",
+                  "      </tr>",
+                  "      <tr>",
+                  "        <td>Created At</td>",
+                  "        <td>{{created_at}}</td>",
+                  "      </tr>",
+                  "    </table>",
+                  "    <div class=\"footer\">PAYMENT API &mdash; Order Response Visualizer</div>",
+                  "  </div>",
+                  "</body>",
+                  "</html>",
+                  "`;",
+                  "",
+                  "function createPayload() {",
+                  "  const res = pm.response.json();",
+                  "  const d = res.data || {};",
+                  "  return {",
+                  "    message: res.message || 'Order created successfully!',",
+                  "    id: d.id,",
+                  "    status: d.status,",
+                  "    source_platform: d.source_platform,",
+                  "    subtotal: d.subtotal,",
+                  "    tax: d.tax,",
+                  "    total: d.total,",
+                  "    user_id: d.user_id,",
+                  "    created_at: d.created_at",
+                  "  };",
+                  "}",
+                  "",
+                  "pm.visualizer.set(template, createPayload());",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"order_id\": 1,\n    \"payment_method\": \"card\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/paymob/initiate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "paymob",
+                "initiate"
+              ]
+            },
+            "description": "Initiate a payment for an existing order.\n\n**Request Body:**\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| order_id | integer | Yes | ID of the order to pay for |\n| amount | number | Yes | Payment amount (must be > 0) |\n| method | string | Yes | Payment method: `card`, `paypal`, etc. |\n| card_number | string | Conditional | Required if `method` is `card` |\n| expiry | string | Conditional | Card expiry in `MM/YY` format |\n| cvv | string | Conditional | 3-digit card security code |\n\n**Responses:**\n- `201` — Payment processed successfully. Returns `transaction_id` and `status`.\n- `422` — Validation error (e.g. invalid amount or missing card details)."
+          },
+          "response": [
+            {
+              "name": "201 Payment Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"order_id\": 1,\n    \"payment_method\": \"card\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"data\": {\n        \"checkout_url\": \"https://accept.paymob.com/unifiedcheckout/?publicKey=egy_pk_test...\",\n        \"payment\": {\n            \"order_id\": 1,\n            \"payment_method\": \"card\",\n            \"amount\": 1225,\n            \"gateway\": \"paymob\",\n            \"currency\": \"EGP\",\n            \"status\": \"pending\",\n            \"idempotency_key\": \"b87a3ad6-6c...\",\n            \"gateway_payment_id\": \"pi_test...\",\n            \"gateway_order_id\": \"5570...\",\n            \"updated_at\": \"2026-07-01T11:34:39.000000Z\",\n            \"created_at\": \"2026-07-01T11:34:39.000000Z\",\n            \"id\": 1\n        }\n    }\n}"
+            },
+            {
+              "name": "422 Validation Error",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"order_id\": 1,\n    \"payment_method\": \"card\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments"
+                  ]
+                }
+              },
+              "status": "Unprocessable Entity (WebDAV) (RFC 4918)",
+              "code": 422,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 422,\n    \"message\": \"Validation failed\",\n    \"errors\": {\n        \"order_id\": [\n            \"required\",\n            \"must exist in the orders table\"\n        ],\n        \"payment_method\": [\n            \"required\",\n            \"provided payment_method is not supported\"\n        ]\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Refund Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "disabled": false
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"amount\": 150.00\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/:{{gateway}}/:{{payment_id}}/refund",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                ":{{gateway}}",
+                ":{{payment_id}}",
+                "refund"
+              ],
+              "variable": [
+                {
+                  "key": "{{gateway}}",
+                  "value": "paymob"
+                },
+                {
+                  "key": "{{payment_id}}",
+                  "value": "1"
+                }
+              ]
+            },
+            "description": "Request a full or partial refund for a completed payment.\n\n**Path Variables:**\n| Variable | Description |\n|----------|-------------|\n| `payment_id` | The unique ID of the payment to refund |\n\n**Request Body:**\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| amount | number | Yes | Amount to refund (cannot exceed original payment) |\n| reason | string | No | Reason for the refund |\n\n**Responses:**\n- `200` — Refund processed successfully.\n- `400` — Refund cannot be processed (e.g. payment not in a refundable state)."
+          },
+          "response": [
+            {
+              "name": "200 Refund Successful",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"amount\": 150.00\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments/{{payment_id}}/refund",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments",
+                    "{{payment_id}}",
+                    "refund"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": 200,\n    \"message\": \"Refunded successfully.\"\n}"
+            },
+            {
+              "name": "400 Refund Failed",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"amount\": 150.00, \"reason\": \"Customer requested refund\"}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments/{{payment_id}}/refund",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments",
+                    "{{payment_id}}",
+                    "refund"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json",
+                  "enabled": true
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 400,\n    \"message\": \"Refund failed.\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/:{{gateway}}/:{{gatewayPayemntId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                ":{{gateway}}",
+                ":{{gatewayPayemntId}}",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "{{gateway}}",
+                  "value": "paymob"
+                },
+                {
+                  "key": "{{gatewayPayemntId}}",
+                  "value": "488150635"
+                }
+              ]
+            },
+            "description": "Check the current status of a specific payment.\n\n**Path Variables:**\n| Variable | Description |\n|----------|-------------|\n| `payment_id` | The unique ID of the payment |\n\nPossible statuses: `pending`, `paid`, `failed`, `refunded`.\n\n**Responses:**\n- `200` — Returns `payment_id`, `status`, and `updated_at`.\n- `404` — Payment not found."
+          },
+          "response": [
+            {
+              "name": "200 Payment Status",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments/:{{gateway}}/:{{gatewayPayemntId}}/verify",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments",
+                    ":{{gateway}}",
+                    ":{{gatewayPayemntId}}",
+                    "verify"
+                  ],
+                  "variable": [
+                    {
+                      "key": "{{gateway}}",
+                      "value": ""
+                    },
+                    {
+                      "key": "{{gatewayPayemntId}}",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": true,\n    \"status\": \"paid\"\n}"
+            },
+            {
+              "name": "404 Payment Not Found",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/payments/:{{gateway}}/:{{gatewayPayemntId}}/verify",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "payments",
+                    ":{{gateway}}",
+                    ":{{gatewayPayemntId}}",
+                    "verify"
+                  ],
+                  "variable": [
+                    {
+                      "key": "{{gateway}}",
+                      "value": "paymob"
+                    },
+                    {
+                      "key": "{{gatewayPayemntId}}",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"success\": false,\n    \"status\": 400,\n    \"message\": \"Bad request.\"\n}"
+            }
+          ]
+        }
+      ],
+      "description": "## Payments\n\nProcess and manage payments for orders, including initiating transactions, checking payment status, and handling refunds.\n\nAll endpoints require authentication via Bearer token (configured at the collection level using `{{access_token}}`). Use `{{payment_id}}` as a path variable to target a specific payment."
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "refresh_token",
+      "value": ""
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "paymob_secret_key",
+      "value": ""
+    },
+    {
+      "key": "paymob_public_key",
+      "value": ""
+    },
+    {
+      "key": "paymob_hmac_secret",
+      "value": ""
+    },
+    {
+      "key": "paymob_api",
+      "value": ""
+    },
+    {
+      "key": "paymob_wallet_integration_id",
+      "value": ""
+    },
+    {
+      "key": "paymob_client_secret",
+      "value": ""
+    }
+  ]
+}

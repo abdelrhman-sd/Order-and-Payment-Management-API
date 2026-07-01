@@ -1,58 +1,140 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Payment Gateway Extensibility
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The payment system was designed using the Strategy Pattern.
 
-## About Laravel
+Each payment gateway implements the same contract, allowing the application to process payments independently of a specific provider.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+The current implementation integrates **Paymob** as the payment gateway. The controller depends only on the payment interface, while the concrete gateway is resolved by the application.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This design allows additional gateways (such as Stripe or PayPal) to be added with minimal changes to the existing code.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Current Structure
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+app/
+└── Providers/
+    └── PaymentServiceProvider.phpjk
+└── Services/
+    └── Payment/
+        ├── Contracts/
+        │   └── PaymentGateway.php
+        └── Gateways/
+            └── BasePaymobGateway.php // abstract containing shared methods between sub classes
+            └── PaymobGateway.php
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Paymob Configuration
 
-## Contributing
+The Paymob credentials are configured through the `.env` file.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Example:
 
-## Code of Conduct
+```env
+PAYMOB_CARD_INTEGRATION_ID=
+PAYMOB_SECRET_KEY=
+PAYMOB_PUBLIC_KEY=
+PAYMOB_HMAC_SECRET=
+PAYMOB_BASE_URL=
+PAYMOB_API_KEY=
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Keeping these values in the environment file allows credentials to be managed securely without modifying the application code.
 
-## Security Vulnerabilities
+## Adding a New Gateway
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+To add another payment gateway:
 
-## License
+1. Create a class that implements the `PaymentGateway` interface.
+2. Extend the BasePaymentGateway abstract class.
+3. Implement the payment gateway processing logic.
+4. Add the required configuration values to `.env`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+No changes are required in the controllers or order business logic.
+Payment Gateway changes based on a route segment variable.
+
+# Installation
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- Docker
+- Docker Compose
+
+## Setup
+
+Clone the repository:
+
+```bash
+git clone https://github.com/abdelrhman-sd/Order-and-Payment-Management-API.git
+cd OrderAndPaymentManagementAPI
+```
+
+Copy the environment file:
+
+```bash
+cp .env.example .env
+```
+
+Update the required environment variables, including your database configuration and Paymob credentials.
+
+Build and start the containers:
+
+```bash
+docker compose up --build -d
+```
+
+Generate the application key:
+
+```bash
+make key
+```
+
+Generate the JWT secret:
+
+```bash
+make jwt
+```
+
+Run the database migrations:
+
+```bash
+make migarate
+```
+
+Seed the database:
+
+```bash
+make seed
+```
+
+The API will now be available at:
+
+```
+http://localhost:8000
+```
+
+## Running Tests
+
+Run the test suite with:
+
+```bash
+docker compose exec app php artisan test
+```
+## How the Payment Gateway Works
+
+The payment module follows the Strategy Pattern through the `PaymentGateway` interface. Every payment gateway must implement the same set of operations, including payment initiation, payment verification, refunds, webhook processing, and payload normalization.
+
+The application never communicates directly with a specific gateway implementation. Instead, it depends on the `PaymentGateway` contract, while the concrete gateway is resolved by the `PaymentServiceProvider` according to the gateway specified in the request.
+
+Common payment functionality that is shared across gateways is implemented in the `BasePaymentGateway` abstract class. This includes processing gateway webhooks, updating payment and order statuses, handling refunds, and managing database transactions. Individual gateway implementations only need to provide provider-specific logic such as API communication and payload mapping.
+
+The current implementation uses `PaymobGateway`, which is responsible for:
+
+- Creating payment intentions through the Paymob API.
+- Generating the checkout URL for the customer.
+- Verifying payment status.
+- Processing full and partial refunds.
+- Converting Paymob responses into a standardized format used by the application.
+
+This design allows new payment providers to be added by implementing the `PaymentGateway` interface, extending `BasePaymentGateway` when shared functionality is needed, registering the gateway in `PaymentServiceProvider`, and adding the required configuration values to the environment file. No changes are required in the controllers or the application's business logic.
