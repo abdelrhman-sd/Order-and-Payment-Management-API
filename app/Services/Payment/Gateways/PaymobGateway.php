@@ -5,26 +5,29 @@ namespace App\Services\Payment\Gateways;
 use App\Enums\PaymentStatus;
 use App\Models\Order;
 use App\Models\Payment;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Override;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class PaymobGateway extends BasePaymentGateway
 {
-    private string $baseUrl;
-    private string $secretKey;
-    private string $publicKey;
-    private string $apiKey;
-    private array $integrationIds;
+    private ?string $accessToken = null;
+    private string  $baseUrl;
+    private string  $secretKey;
+    private string  $publicKey;
+    private string  $apiKey;
+    private array   $integrationIds;
 
     public function __construct()
     {
-        $this->baseUrl      = config('payment.paymob.base_url', 'https://accept.paymob.com');
-        $this->secretKey    = config('payment.paymob.secret_key');
-        $this->publicKey    = config('payment.paymob.public_key');
-        $this->apiKey       = config('payment.paymob.api_key');
-        $this->integrationIds = array_filter(config('payment.paymob.integrations'));
+        $this->baseUrl          = config('payment.paymob.base_url', 'https://accept.paymob.com');
+        $this->apiKey           = config('payment.paymob.api_key');
+        $this->secretKey        = config('payment.paymob.secret_key');
+        $this->publicKey        = config('payment.paymob.public_key');
+        $this->integrationIds   = config('payment.paymob.integrations');
     }
 
     #[Override]
@@ -71,29 +74,30 @@ class PaymobGateway extends BasePaymentGateway
     #[Override]
     public function verifyPayment(string $gatewayPaymentId): array
     {
-        $response = Http::withToken($this->secretKey)
+        $response = Http::withToken($this->getAccessToken())
             ->acceptJson()
             ->get("{$this->baseUrl}/api/acceptance/transactions/{$gatewayPaymentId}");
 
         if ($response->failed()) {
+
+            if ($response->status() === Response::HTTP_NOT_FOUND) {
+                throw new BadRequestException(__('resource.not_found', ['resource' => 'Payment']));
+            }
+
+            if ($response->status() === Response::HTTP_BAD_REQUEST) {
+                throw new BadRequestException('Payment gateway id is invalid');
+            }
+
             return ['status' => 'pending'];
         }
 
-        $data = $response->json();
-
-        return ['status' => $this->mapStatus($data)];
+        return ['status' => $this->mapStatus($response->json())];
     }
 
     #[Override]
     public function refund(Payment $payment, int $refundedAmount): bool
     {
-        $response = Http::post("{$this->baseUrl}/api/auth/tokens", [
-            'api_key' => $this->apiKey
-        ]);
-
-        $token = $response->json('token');
-
-        $response = Http::withToken($token)
+        $response = Http::withToken($this->getAccessToken())
             ->acceptJson()
             ->post("{$this->baseUrl}/api/acceptance/void_refund/refund", [
                 'transaction_id' => $payment->gateway_payment_id,
@@ -132,9 +136,21 @@ class PaymobGateway extends BasePaymentGateway
         return $payload['raw']['data_message'] ?? 'UNKNOWN';
     }
 
-    private function stringifyForHmac(mixed $value): string
+    private function getAccessToken(): string
     {
-        return (is_bool($value) ? 'true' : 'false') ?: (string) $value;
+        if (! is_null($this->accessToken)) {
+            return $this->accessToken;
+        }
+
+        $response = Http::post("{$this->baseUrl}/api/auth/tokens", [
+            'api_key' => $this->apiKey
+        ]);
+
+        if (is_null($this->accessToken = $response->json('token'))) {
+            abort(500);
+        }
+
+        return $this->accessToken;
     }
 
     private function mapStatus(array $data): string

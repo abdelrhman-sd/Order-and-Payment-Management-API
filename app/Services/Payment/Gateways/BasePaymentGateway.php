@@ -6,6 +6,7 @@ use App\Services\Payment\Contracts\PaymentGateway;
 use App\Models\Payment;
 use App\Enums\PaymentStatus;
 use App\Enums\OrderStatus;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Override;
@@ -28,6 +29,10 @@ abstract class BasePaymentGateway implements PaymentGateway
         /** @var Payment */
         $payment = Payment::where('gateway_order_id', $payload['gateway_order_id'])
             ->firstOrFail();
+
+        if ($payment->order->status !== OrderStatus::CONFIRMED->value) {
+            abort(Response::HTTP_FORBIDDEN, __('payment.order_invalid_status'));
+        }
 
         DB::beginTransaction();
 

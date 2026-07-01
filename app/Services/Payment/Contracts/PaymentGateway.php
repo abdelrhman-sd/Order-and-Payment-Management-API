@@ -18,7 +18,6 @@ interface PaymentGateway
      *   'gateway_payment_id' => string,   // gateway's reference for this attempt
      *   'gateway_order_id'   => string|null,
      *   'checkout_url'       => string,   // where to send the customer
-     *   'raw'                => array,    // full gateway response, for metadata
      * ]
      */
     public function initiatePayment(Order $order, Payment $payment): array;
